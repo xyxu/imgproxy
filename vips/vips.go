@@ -8,7 +8,7 @@ package vips
 import "C"
 import (
 	"errors"
-	"fmt"
+	 "fmt"
 	"math"
 	"os"
 	"runtime"
@@ -526,13 +526,13 @@ func (img *Image) Extract(out *Image, left, top, width, height int) error {
 }
 
 func (img *Image) SmartCrop(width, height int) error {
-	var tmp *C.VipsImage
+	// var tmp *C.VipsImage
 
-	if C.vips_smartcrop_go(img.VipsImage, &tmp, C.int(width), C.int(height)) != 0 {
-		return Error()
-	}
+	// if C.vips_smartcrop_go(img.VipsImage, &tmp, C.int(width), C.int(height)) != 0 {
+	// 	return Error()
+	// }
 
-	C.swap_and_clear(&img.VipsImage, tmp)
+	// C.swap_and_clear(&img.VipsImage, tmp)
 	return nil
 }
 

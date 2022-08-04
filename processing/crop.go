@@ -21,16 +21,21 @@ func cropImage(img *vips.Image, cropWidth, cropHeight int, gravity *options.Grav
 		return nil
 	}
 
-	if gravity.Type == options.GravitySmart {
-		if err := img.CopyMemory(); err != nil {
-			return err
-		}
-		if err := img.SmartCrop(cropWidth, cropHeight); err != nil {
-			return err
-		}
-		// Applying additional modifications after smart crop causes SIGSEGV on Alpine
-		// so we have to copy memory after it
-		return img.CopyMemory()
+	// if gravity.Type == options.GravitySmart {
+	// 	if err := img.CopyMemory(); err != nil {
+	// 		return err
+	// 	}
+	// 	if err := img.SmartCrop(cropWidth, cropHeight, imgdata); err != nil {
+	// 		return err
+	// 	}
+	// 	// Applying additional modifications after smart crop causes SIGSEGV on Alpine
+	// 	// so we have to copy memory after it
+	// 	return img.CopyMemory()
+	// }
+
+
+	if gravity.Type == options.GravitySmart && int(gravity.X) + cropWidth <= imgWidth && int(gravity.Y) + cropHeight <= imgHeight {
+		return img.Crop(int(gravity.X), int(gravity.Y), cropWidth, cropHeight)
 	}
 
 	left, top := calcPosition(imgWidth, imgHeight, cropWidth, cropHeight, gravity, false)

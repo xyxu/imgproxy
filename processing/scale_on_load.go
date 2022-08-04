@@ -48,6 +48,10 @@ func calcJpegShink(scale float64, imgtype imagetype.Type) int {
 }
 
 func scaleOnLoad(pctx *pipelineContext, img *vips.Image, po *options.ProcessingOptions, imgdata *imagedata.ImageData) error {
+	if po.Gravity.Type == options.GravitySmart {
+		return nil
+	}
+
 	prescale := math.Max(pctx.wscale, pctx.hscale)
 
 	if !canScaleOnLoad(pctx, imgdata, prescale) {

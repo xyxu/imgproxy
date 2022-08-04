@@ -19,9 +19,11 @@ require (
 	github.com/ianlancetaylor/cgosymbolizer v0.0.0-20220405231054-a1ae3e4bba26 // indirect
 	github.com/johannesboyne/gofakes3 v0.0.0-20220627085814-c3ac35da23b2
 	github.com/matoous/go-nanoid/v2 v2.0.0
+	github.com/muesli/smartcrop v0.3.0 // indirect
 	github.com/ncw/swift/v2 v2.0.1
 	github.com/newrelic/go-agent/v3 v3.17.0
 	github.com/newrelic/newrelic-telemetry-sdk-go v0.8.1
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/prometheus/client_golang v1.12.2
 	github.com/sirupsen/logrus v1.9.0

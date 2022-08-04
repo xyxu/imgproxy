@@ -195,7 +195,7 @@ vips_rad2float_go(VipsImage *in, VipsImage **out) {
 int
 vips_resize_go(VipsImage *in, VipsImage **out, double wscale, double hscale) {
   if (!vips_image_hasalpha(in))
-    return vips_resize(in, out, wscale, "vscale", hscale, NULL);
+    return vips_resize(in, out, wscale, "vscale", hscale, "kernel", VIPS_KERNEL_CUBIC, NULL);
 
   VipsBandFormat format = vips_band_format(in);
 
@@ -204,7 +204,7 @@ vips_resize_go(VipsImage *in, VipsImage **out, double wscale, double hscale) {
 
   int res =
     vips_premultiply(in, &t[0], NULL) ||
-    vips_resize(t[0], &t[1], wscale, "vscale", hscale, NULL) ||
+    vips_resize(t[0], &t[1], wscale, "vscale", hscale, "kernel", VIPS_KERNEL_CUBIC, NULL) ||
     vips_unpremultiply(t[1], &t[2], NULL) ||
     vips_cast(t[2], out, format, NULL);
 

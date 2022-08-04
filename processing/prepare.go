@@ -2,12 +2,16 @@ package processing
 
 import (
 	"math"
+	"image"
+	"bytes"
 
 	"github.com/imgproxy/imgproxy/v3/imagedata"
 	"github.com/imgproxy/imgproxy/v3/imagetype"
 	"github.com/imgproxy/imgproxy/v3/imath"
 	"github.com/imgproxy/imgproxy/v3/options"
 	"github.com/imgproxy/imgproxy/v3/vips"
+	"github.com/muesli/smartcrop"
+	"github.com/muesli/smartcrop/nfnt"
 )
 
 func extractMeta(img *vips.Image, baseAngle int, useOrientation bool) (int, int, int, bool) {
@@ -152,6 +156,21 @@ func prepare(pctx *pipelineContext, img *vips.Image, po *options.ProcessingOptio
 	pctx.imgtype = imagetype.Unknown
 	if imgdata != nil {
 		pctx.imgtype = imgdata.Type
+	}
+
+	if po.Gravity.Type == options.GravitySmart {
+		reader := bytes.NewReader(imgdata.Data)
+		img_decoded, _, _ := image.Decode(reader)
+		analyzer := smartcrop.NewAnalyzer(nfnt.NewDefaultResizer())
+		topCrop, _ := analyzer.FindBestCrop(img_decoded, po.Width, po.Height)
+
+		maxX := imath.MinNonZero(img_decoded.Bounds().Dx(), topCrop.Max.X)
+		maxY := imath.MinNonZero(img_decoded.Bounds().Dy(), topCrop.Max.Y)
+		po.Gravity.X = float64(topCrop.Min.X)
+		po.Gravity.Y = float64(topCrop.Min.Y)
+		po.Crop.Width = float64(maxX - topCrop.Min.X)
+		po.Crop.Height = float64(maxY - topCrop.Min.Y)
+		pctx.cropGravity = po.Gravity
 	}
 
 	pctx.srcWidth, pctx.srcHeight, pctx.angle, pctx.flip = extractMeta(img, po.Rotate, po.AutoRotate)
